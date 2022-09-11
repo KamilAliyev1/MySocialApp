@@ -1,5 +1,6 @@
 package com.kmsocialapp.post;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kmsocialapp.comment.Comment;
 import com.kmsocialapp.like.Like;
@@ -40,10 +41,12 @@ public class Post implements Resource {
     private UserProfile userProfile;
 
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "post")
     private Set<Like> likes;
 
 
+    @JsonIgnore
     @OneToMany(mappedBy = "post",cascade = {CascadeType.REMOVE,CascadeType.DETACH},fetch = FetchType.LAZY)
     private List<Comment> comments;
 
@@ -85,6 +88,7 @@ public class Post implements Resource {
         this.info = info;
     }
 
+    @JsonIgnore
     public UserProfile getUserProfile() {
         return userProfile;
     }

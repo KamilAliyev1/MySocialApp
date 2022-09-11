@@ -23,10 +23,6 @@ public abstract class CustomRestController<T extends Resource> {
         List<T> objectList;
         try {
             objectList = service.findAll();
-
-            objectList=objectList.stream().map(
-                    obj -> (T)service.changeForRest(obj)
-            ).collect(Collectors.toList());
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -41,7 +37,8 @@ public abstract class CustomRestController<T extends Resource> {
         }
         try{
             service.save(obj);
-            obj= (T) service.changeForRest(obj);
+        }catch (ResourceOwnerException e){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -53,12 +50,13 @@ public abstract class CustomRestController<T extends Resource> {
         T obj;
         try{
             obj = (T) service.findById(id.longValue());
+        }catch (ResourceOwnerException e){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }catch (ResourcesNotFounded e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        obj= (T) service.changeForRest(obj);
 
         return new ResponseEntity(obj,HttpStatus.OK);
     }
@@ -71,6 +69,8 @@ public abstract class CustomRestController<T extends Resource> {
         try {
             if(!service.existsById(Long.valueOf(id.longValue()))) throw new ResourcesNotFounded();
             service.save(obj);
+        }catch (ResourceOwnerException e){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }catch (ResourcesNotFounded e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }catch (Exception e){
@@ -85,6 +85,8 @@ public abstract class CustomRestController<T extends Resource> {
 
         try {
             service.deleteById(id.longValue());
+        }catch (ResourceOwnerException e){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } catch (ResourcesNotFounded e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }catch (Exception e) {
@@ -92,9 +94,6 @@ public abstract class CustomRestController<T extends Resource> {
         }
         return new ResponseEntity<>(HttpStatus.OK);
 
-
     }
-
-
 
 }

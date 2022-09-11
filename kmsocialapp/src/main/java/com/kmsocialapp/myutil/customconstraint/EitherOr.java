@@ -1,4 +1,4 @@
-package com.kmsocialapp.myutil.customconstroaint;
+package com.kmsocialapp.myutil.customconstraint;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

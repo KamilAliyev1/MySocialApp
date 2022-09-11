@@ -1,10 +1,14 @@
 package com.kmsocialapp.message;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kmsocialapp.myutil.Resource;
-import com.kmsocialapp.myutil.customconstroaint.EitherOr;
-import com.kmsocialapp.myutil.customconstroaint.EitherorObject;
+import com.kmsocialapp.myutil.customconstraint.EitherOr;
+import com.kmsocialapp.myutil.customconstraint.EitherorObject;
 import com.kmsocialapp.post.Post;
+import com.kmsocialapp.userprofile.UserProfile;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @EitherOr(message = "required message or post")
@@ -15,10 +19,14 @@ public class Message implements Resource, EitherorObject {
     private Long id;
 
     @Size(min=1,max = 1000)
-    String message;
+    private String message;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.REFRESH})
-    Post post;
+    private Post post;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.REFRESH})
+    private UserProfile userProfile;
 
     public Message() {
     }
@@ -39,6 +47,7 @@ public class Message implements Resource, EitherorObject {
         this.message = message;
     }
 
+    @JsonIgnore
     public Post getPost() {
         return post;
     }
@@ -55,5 +64,14 @@ public class Message implements Resource, EitherorObject {
     @Override
     public Object getSecondforEeitheror() {
         return getPost();
+    }
+
+    @JsonIgnore
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
     }
 }

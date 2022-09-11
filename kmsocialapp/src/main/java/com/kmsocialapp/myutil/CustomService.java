@@ -1,39 +1,29 @@
 package com.kmsocialapp.myutil;
 
+import com.kmsocialapp.security.usersecuritydetail.UserSecurityDetail;
+import com.kmsocialapp.security.usersecuritydetail.UserSecurityDetailService;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CustomService<T> {
+import static com.kmsocialapp.security.AppUserRoles.ADMIN;
 
-    protected JpaRepository jpaRepository;
+public interface CustomService<T> {
 
-    public CustomService(JpaRepository jpaRepository) {
-        this.jpaRepository=jpaRepository;
-    }
+    T findById(Long id) ;
 
-    public T findById(Long id) {
-        var temp = jpaRepository.findById(id);
-        if(temp.isEmpty())throw new ResourcesNotFounded("not founded");
-        return (T) temp.get();
-    }
+    List findAll();
 
-    public List findAll() {
-        return jpaRepository.findAll();
-    }
+    void save(T obj);
 
-    public abstract T changeForRest(T t) ;
+    boolean existsById(Long id) ;
 
-    public abstract void save(T obj);
+    void deleteById(Long id);
 
-    public boolean existsById(Long id) {
-        return jpaRepository.existsById(id);
-    }
+    void checkPermisson(Long id);
 
-    public void deleteById(Long id) {
-        if(jpaRepository.existsById(id)) {
-            jpaRepository.deleteById(id);
-            return;
-        }
-        throw new ResourcesNotFounded("securitydetail not founded");
-    }
+
 }

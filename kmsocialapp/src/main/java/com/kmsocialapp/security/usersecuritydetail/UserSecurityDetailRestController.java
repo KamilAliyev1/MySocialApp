@@ -1,4 +1,4 @@
-package com.kmsocialapp.security;
+package com.kmsocialapp.security.usersecuritydetail;
 
 import com.kmsocialapp.myutil.CustomRestController;
 import org.springframework.web.bind.annotation.*;
@@ -11,5 +11,11 @@ public class UserSecurityDetailRestController extends CustomRestController<UserS
         super(userSecurityDetailService);
     }
 
+
+    //@GetMapping
+    //public String refreshToken(HttpServletRequest request, HttpServletResponse response){
+    //
+//
+    //}
 
 }

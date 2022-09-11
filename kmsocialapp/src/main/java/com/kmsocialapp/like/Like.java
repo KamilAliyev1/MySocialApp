@@ -1,10 +1,11 @@
 package com.kmsocialapp.like;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kmsocialapp.comment.Comment;
 import com.kmsocialapp.myutil.Resource;
-import com.kmsocialapp.myutil.customconstroaint.EitherOr;
-import com.kmsocialapp.myutil.customconstroaint.EitherorObject;
+import com.kmsocialapp.myutil.customconstraint.EitherOr;
+import com.kmsocialapp.myutil.customconstraint.EitherorObject;
 import com.kmsocialapp.post.Post;
 import com.kmsocialapp.userprofile.UserProfile;
 import javax.persistence.*;
@@ -24,13 +25,17 @@ public class Like implements EitherorObject, Resource {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_profile_id")
     private UserProfile userProfile;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
+
 
     private LocalDateTime dateTime;
 
@@ -63,6 +68,7 @@ public class Like implements EitherorObject, Resource {
         this.id = id;
     }
 
+    @JsonIgnore
     public UserProfile getUserProfile() {
         return userProfile;
     }
@@ -71,6 +77,7 @@ public class Like implements EitherorObject, Resource {
         this.userProfile = userProfile;
     }
 
+    @JsonIgnore
     public Post getPost() {
         return post;
     }
@@ -79,6 +86,7 @@ public class Like implements EitherorObject, Resource {
         this.post = post;
     }
 
+    @JsonIgnore
     public Comment getComment() {
         return comment;
     }

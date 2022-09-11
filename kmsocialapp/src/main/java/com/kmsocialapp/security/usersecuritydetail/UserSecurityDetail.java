@@ -1,10 +1,11 @@
-package com.kmsocialapp.security;
+package com.kmsocialapp.security.usersecuritydetail;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kmsocialapp.myutil.Resource;
-import com.kmsocialapp.myutil.customconstroaint.EitherOr;
-import com.kmsocialapp.myutil.customconstroaint.EitherorObject;
+import com.kmsocialapp.myutil.customconstraint.EitherOr;
+import com.kmsocialapp.myutil.customconstraint.EitherorObject;
 import com.kmsocialapp.userprofile.UserProfile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,7 +42,8 @@ public class UserSecurityDetail implements UserDetails, EitherorObject, Resource
     @NotBlank
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
     private UserProfile userProfile;
 
     @ElementCollection(fetch = FetchType.EAGER)

@@ -1,11 +1,13 @@
 package com.kmsocialapp.userprofile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kmsocialapp.chat.Chat;
 import com.kmsocialapp.comment.Comment;
 import com.kmsocialapp.like.Like;
 import com.kmsocialapp.myutil.Resource;
 import com.kmsocialapp.post.Post;
+import com.kmsocialapp.security.usersecuritydetail.UserSecurityDetail;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -27,20 +29,30 @@ public class UserProfile implements Resource {
     @Enumerated(EnumType.STRING)
     private ProfileType profileType;
 
+
+    @NotNull
+    @OneToOne
+    private UserSecurityDetail userSecurityDetail;
+
     @NotBlank
     @Size(min = 3,max = 30)
     private String username;
     private String profileinfo;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "userProfile",fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.REMOVE})
     private List<Comment> comments;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "userProfile",fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.REMOVE})
     private Set<Like> likes;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "userProfile")
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.REMOVE},mappedBy = "userProfile")
     private Set<Post> posts;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.REMOVE})
     private List<Chat> chats;
 
     public UserProfile() {
@@ -109,6 +121,16 @@ public class UserProfile implements Resource {
 
     public void setChats(List<Chat> chats) {
         this.chats = chats;
+    }
+
+   // @JsonIgnore
+    public UserSecurityDetail getUserSecurityDetail() {
+        return userSecurityDetail;
+    }
+
+    //@JsonIgnore
+    public void setUserSecurityDetail(UserSecurityDetail userSecurityDetail) {
+        this.userSecurityDetail = userSecurityDetail;
     }
 }
 

@@ -1,5 +1,6 @@
-package com.kmsocialapp.security;
+package com.kmsocialapp.security.usersecuritydetail;
 
+import com.kmsocialapp.security.usersecuritydetail.UserSecurityDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

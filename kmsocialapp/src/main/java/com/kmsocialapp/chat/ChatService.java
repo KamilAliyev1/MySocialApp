@@ -2,24 +2,58 @@ package com.kmsocialapp.chat;
 
 
 import com.kmsocialapp.myutil.CustomService;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.kmsocialapp.myutil.ResourceOwnerException;
+import com.kmsocialapp.myutil.ResourcesNotFounded;
+import com.kmsocialapp.security.usersecuritydetail.UserSecurityDetail;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class ChatService extends CustomService<Chat> {
-    public ChatService(ChatDao jpaRepository) {
-        super(jpaRepository);
+public class ChatService implements CustomService<Chat> {
+
+    private final ChatDao chatDao;
+
+    public ChatService(ChatDao chatDao) {
+        this.chatDao = chatDao;
     }
 
     @Override
-    public Chat changeForRest(Chat chat) {
-        chat.setMessages(null);
-        chat.setUserProfiles(null);
-        return chat;
+    public Chat findById(Long id) {
+        checkPermisson(id);
+        var optional = chatDao.findById(id);
+        return optional.get();
+    }
+
+    @Override
+    public List findAll() {
+        return chatDao.findAll();
     }
 
     @Override
     public void save(Chat obj) {
-        jpaRepository.save(obj);
+        chatDao.save(obj);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return chatDao.existsById(id);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        checkPermisson(id);
+        chatDao.deleteById(id);
+    }
+
+    @Override
+    public void checkPermisson(Long id) {
+        UserSecurityDetail userSecurityDetail = (UserSecurityDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var optional = chatDao.findById(id);
+        if(optional.isEmpty())throw new ResourcesNotFounded();
+        if(optional.get().getUserProfiles().stream().anyMatch(u->u.getId()==userSecurityDetail.getId()))
+            return;
+        throw new ResourceOwnerException();
     }
 }

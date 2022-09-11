@@ -1,4 +1,4 @@
-package com.kmsocialapp.security;
+package com.kmsocialapp.security.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

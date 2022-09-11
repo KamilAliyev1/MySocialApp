@@ -1,4 +1,4 @@
-package com.kmsocialapp.myutil.customconstroaint;
+package com.kmsocialapp.myutil.customconstraint;
 
 public interface EitherorObject {
     Object getFirstforEitheror();
